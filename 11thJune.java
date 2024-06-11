@@ -2,31 +2,39 @@
 
 class Solution {
     public int[] relativeSortArray(int[] arr1, int[] arr2) {
-        //Better soln(Taken help from Editorial)
-        ArrayList<Integer> result = new ArrayList<>();
+        //Optimal soln(Taken help from Editorial)
+        Map<Integer, Integer> countMap = new HashMap<>();
+        List<Integer> remaining = new ArrayList<>();
+        List<Integer> result = new ArrayList<>();
 
-        for(int i=0;i<arr2.length;i++){
-            for(int j=0;j<arr1.length;j++){
-                if(arr2[i]==arr1[j]){
-                    result.add(arr1[j]);
-                    //Mark the element in target array as visited
-                    arr1[j]=-1;
-                }
+        // Initialize count map with relative order elements
+        for (int value : arr2) {
+            countMap.put(value, 0);
+        }
+
+        // Count occurrences of elements in target array
+        for (int value : arr1) {
+            if (countMap.containsKey(value)) {
+                countMap.put(value, countMap.get(value) + 1);
+            } else {
+                remaining.add(value);
             }
         }
 
-        Arrays.sort(arr1);
-        //Add the remaining elements to the result array
-        for(int i=0;i<arr1.length;i++){
-            if(arr1[i]!=-1) result.add(arr1[i]);
+        // Sort the remaining elements
+        Collections.sort(remaining);
+
+        // Add elements as per relative order
+        for (int value : arr2) {
+            for (int j = 0; j < countMap.get(value); j++) {
+                result.add(value);
+            }
         }
 
-        int finale[] =  new int[result.size()];
-        for(int i=0;i<result.size();i++){
-            finale[i]=result.get(i);
-        }
+        // Add remaining elements
+        result.addAll(remaining);
 
-        return finale;
-
+        // Convert ArrayList to array
+        return result.stream().mapToInt(Integer::intValue).toArray();
     }
 }
