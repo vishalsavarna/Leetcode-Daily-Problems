@@ -2,55 +2,31 @@
 
 class Solution {
     public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        //Better soln(Taken help from Editorial)
+        ArrayList<Integer> result = new ArrayList<>();
 
-        //Mine BF soln(Iguess)
-
-        HashMap<Integer,Integer> hmap = new HashMap<>();
         for(int i=0;i<arr2.length;i++){
-            hmap.put(arr2[i],i);
-        }
-
-        ArrayList<Integer> appeared = new ArrayList<>();
-        ArrayList<Integer> unappeared = new ArrayList<>();
-
-        for(int i=0;i<arr1.length;i++){
-            if(hmap.containsKey(arr1[i])) appeared.add(arr1[i]);
-            else unappeared.add(arr1[i]);
-        }
-
-        //sorting the unappeared elements in ascending order
-        Collections.sort(unappeared);
-
-        int app[] = new int[appeared.size()];
-        for(int i=0;i<appeared.size();i++){
-            app[i]=appeared.get(i);
-        }
-
-        //selection sort modified for appeared array sorting using hashmap
-        for(int i=0;i<app.length-1;i++){
-            int min=i;
-            for(int j=i+1;j<app.length;j++){
-                if(hmap.get(app[j])<hmap.get(app[min])) min=j;
+            for(int j=0;j<arr1.length;j++){
+                if(arr2[i]==arr1[j]){
+                    result.add(arr1[j]);
+                    //Mark the element in target array as visited
+                    arr1[j]=-1;
+                }
             }
-            //swap
-            int temp=app[min];
-            app[min]=app[i];
-            app[i]=temp;
         }
 
-        
-        int result[] = new int[arr1.length];
-        int k=0;
+        Arrays.sort(arr1);
+        //Add the remaining elements to the result array
         for(int i=0;i<arr1.length;i++){
-            if(i<app.length) result[i]=app[i];
-            else{
-                result[i]=unappeared.get(k);
-                k++;
-            } 
+            if(arr1[i]!=-1) result.add(arr1[i]);
         }
 
-        return result;
+        int finale[] =  new int[result.size()];
+        for(int i=0;i<result.size();i++){
+            finale[i]=result.get(i);
+        }
 
+        return finale;
 
     }
 }
